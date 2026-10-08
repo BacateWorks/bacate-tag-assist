@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>BacateTagAssist.Web</RootNamespace>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.12" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BacateTagAssist.Core\BacateTagAssist.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- O frontend vai embutido no assembly: o executável final é um único arquivo. -->
+    <EmbeddedResource Include="wwwroot\**\*" />
+  </ItemGroup>
+</Project>

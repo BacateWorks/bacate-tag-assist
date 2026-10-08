@@ -1,0 +1,25 @@
+# ------------------------------------------------------------------------------
+# Arquivo Quadlet para Podman no systemd (OpenMediaVault / Linux)
+# Coloque em: ~/.config/containers/systemd/bacate-tag-assist.container
+# Ative com: systemctl --user daemon-reload && systemctl --user start bacate-tag-assist
+# ------------------------------------------------------------------------------
+
+[Unit]
+Description=BacateTagAssist Container
+After=network-online.target
+
+[Container]
+Image=ghcr.io/bacate/bacate-tag-assist:latest
+ContainerName=bacate-tag-assist
+PublishPort=5000:5000
+Volume=%h/.config/bacate-tag-assist:/config:Z
+Volume=/media:/media:Z
+Environment=TZ=America/Sao_Paulo
+Environment=BTA_CONFIG_DIR=/config
+Environment=BTA_ROOTS=/media
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,22 @@
+## .NET Core / C#
+[Bb]in/
+[Oo]bj/
+dist/
+.tools/
+
+## IDEs e Editores
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+## Arquivos de log e testes
+*.log
+TestResults/
+
+## OS Files
+.DS_Store
+Thumbs.db
+desktop.ini

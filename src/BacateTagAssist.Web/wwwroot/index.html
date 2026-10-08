@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BacateTagAssist - Nomenclatura para Trackers</title>
+  <link rel="icon" href="assets/mascot-icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Barra Superior -->
+    <header class="app-header">
+      <div class="brand">
+        <img class="brand-avatar" src="assets/mascot.png" alt="Mascote Bacate">
+        <div class="brand-info">
+          <h1>Bacate<span>TagAssist</span></h1>
+          <span class="version-pill" id="appVersion">v1.0 Pro</span>
+        </div>
+      </div>
+
+      <div class="header-tools">
+        <div class="status-badge" id="hostBadge">
+          <span class="status-dot"></span>
+          <span id="hostStatusText">Conectado</span>
+        </div>
+
+        <button class="btn btn-ghost btn-icon" id="themeToggle" title="Alternar Tema (Escuro / OLED / Claro)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </button>
+
+        <button class="btn btn-ghost btn-icon" id="btnOpenSettings" title="Configurações (TMDB & MediaInfo)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+
+        <button class="btn btn-secondary btn-sm" id="btnOpenGuide">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+          Guia de Uso
+        </button>
+      </div>
+    </header>
+
+    <!-- Área Principal -->
+    <main class="main-layout">
+      <!-- Painel Lateral: Configurações e Formulário -->
+      <aside class="sidebar-panel">
+        <!-- Passo 1: Seleção de Pasta -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="step-num">1</span>
+              <span>Pasta do Release</span>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="btnBrowseServer" title="Navegar nas pastas do servidor">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+              Navegar
+            </button>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Selecione a pasta do filme ou da temporada completa.</p>
+          <div class="folder-box">
+            <input type="text" id="folderInput" placeholder="Caminho da pasta ou selecione ao lado..." />
+            <button class="btn btn-secondary btn-sm" id="btnChooseFolder" title="Escolher pasta nativa">Escolher</button>
+            <button class="btn btn-primary btn-sm" id="btnScanFolder">Carregar →</button>
+          </div>
+          <div class="recent-chips" id="recentChips"></div>
+        </div>
+
+        <!-- Assistentes Inteligentes (MediaInfo & TMDB) -->
+        <div class="smart-tools">
+          <div class="smart-card" id="cardMediaInfoTrigger">
+            <div class="smart-card-top">
+              <h4>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect width="15" height="14" x="1" y="5" rx="2" ry="2"/></svg>
+                MediaInfo
+              </h4>
+              <span class="badge ok" id="badgeMediaInfo">Pronto</span>
+            </div>
+            <p id="descMediaInfo">Análise automática de vídeo, áudio e canais.</p>
+          </div>
+
+          <div class="smart-card" id="cardTmdbTrigger">
+            <div class="smart-card-top">
+              <h4>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                TMDB
+              </h4>
+              <span class="badge info" id="badgeTmdb">Buscar</span>
+            </div>
+            <p id="descTmdb">Título oficial, ano e episódios com 1 clique.</p>
+          </div>
+        </div>
+
+        <!-- Passo 2: Formulário do Release -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="step-num">2</span>
+              <span>Dados do Release</span>
+            </div>
+          </div>
+
+          <!-- Modos: Filme, Season Pack, Episódio -->
+          <div class="mode-tabs" role="tablist">
+            <button class="mode-tab active" data-mode="movie">Filme</button>
+            <button class="mode-tab" data-mode="season">Season pack</button>
+            <button class="mode-tab" data-mode="episode">Episódio</button>
+          </div>
+
+          <!-- 1. Identificação -->
+          <div class="form-group">
+            <label for="fieldTitle">Nome da Obra</label>
+            <input type="text" id="fieldTitle" data-field="title" placeholder="Ex.: Breaking Bad ou O Poderoso Chefão">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" id="wrapYear">
+              <label for="fieldYear">Ano <span id="yearReqNotice" style="color: var(--primary);">*</span></label>
+              <input type="text" id="fieldYear" data-field="year" maxlength="4" placeholder="2008">
+            </div>
+            <div class="form-group hidden" id="wrapSeason">
+              <label for="fieldSeason">Temporada</label>
+              <input type="text" id="fieldSeason" data-field="season" placeholder="S01">
+            </div>
+          </div>
+
+          <div class="form-group hidden" id="wrapEpisode">
+            <label for="fieldEpisode">Episódio</label>
+            <input type="text" id="fieldEpisode" data-field="episode" placeholder="S01E01">
+          </div>
+
+          <div class="form-group">
+            <label for="fieldEdition">Edição / Versão</label>
+            <input type="text" id="fieldEdition" data-field="edition" placeholder="Extended, IMAX, Director's Cut…">
+          </div>
+
+          <!-- 2. Vídeo & Origem -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <h3>Vídeo & Origem</h3>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fieldSource">Origem</label>
+                <select id="fieldSource" data-field="source">
+                  <option value=""></option>
+                  <option value="UHD Blu-Ray">UHD Blu-Ray</option>
+                  <option value="Blu-Ray">Blu-Ray</option>
+                  <option value="UHD BluRay">UHD BluRay</option>
+                  <option value="BluRay">BluRay</option>
+                  <option value="BRRip">BRRip</option>
+                  <option value="WEB-DL">WEB-DL</option>
+                  <option value="WEBRip">WEBRip</option>
+                  <option value="DVD">DVD</option>
+                  <option value="DVD5">DVD5</option>
+                  <option value="DVD9">DVD9</option>
+                  <option value="DVDRip">DVDRip</option>
+                  <option value="HDTV">HDTV</option>
+                  <option value="PDTV">PDTV</option>
+                  <option value="TVRip">TVRip</option>
+                  <option value="VHSRip">VHSRip</option>
+                  <option value="LDRip">LDRip</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="fieldReleaseType">Formato</label>
+                <select id="fieldReleaseType" data-field="releaseType">
+                  <option value="normal">Normal</option>
+                  <option value="remux">REMUX</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fieldResolution">Resolução</label>
+                <select id="fieldResolution" data-field="resolution">
+                  <option value=""></option>
+                  <option value="480p">480p</option>
+                  <option value="576p">576p</option>
+                  <option value="720p">720p</option>
+                  <option value="1080i">1080i</option>
+                  <option value="1080p">1080p</option>
+                  <option value="2160p">2160p</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="fieldStreaming">Streaming</label>
+                <select id="fieldStreaming" data-field="streaming">
+                  <option value=""></option>
+                  <option value="AMZN">AMZN (Amazon)</option>
+                  <option value="ATV">ATV</option>
+                  <option value="ATVP">ATVP (Apple TV+)</option>
+                  <option value="CR">CR (Crunchyroll)</option>
+                  <option value="DSNP">DSNP (Disney+)</option>
+                  <option value="GLBO">GLBO (Globoplay)</option>
+                  <option value="HMAX">HMAX (Max)</option>
+                  <option value="HULU">HULU</option>
+                  <option value="NF">NF (Netflix)</option>
+                  <option value="PMTP">PMTP (Paramount+)</option>
+                  <option value="VIKI">VIKI</option>
+                  <option value="custom">Outro…</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group hidden" id="wrapCustomStreaming">
+              <label for="fieldCustomStreaming">Sigla do Streaming Personalizado</label>
+              <input type="text" id="fieldCustomStreaming" data-field="customStreaming" placeholder="Ex.: MAX, CLARO…">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fieldVideoCodec">Codec de Vídeo</label>
+                <select id="fieldVideoCodec" data-field="videoCodec">
+                  <option value=""></option>
+                  <option value="AVC">AVC</option>
+                  <option value="HEVC">HEVC</option>
+                  <option value="VC-1">VC-1</option>
+                  <option value="AV1">AV1</option>
+                  <option value="x264">x264</option>
+                  <option value="x265">x265</option>
+                  <option value="H.264">H.264</option>
+                  <option value="H.265">H.265</option>
+                  <option value="Xvid">Xvid</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="fieldRange">Range de Cor</label>
+                <select id="fieldRange" data-field="range">
+                  <option value=""></option>
+                  <option value="HDR">HDR</option>
+                  <option value="HDR10">HDR10</option>
+                  <option value="HDR10+">HDR10+</option>
+                  <option value="HDR10P">HDR10P</option>
+                  <option value="DV">DV</option>
+                  <option value="DV HDR">DV HDR</option>
+                  <option value="DV HDR10+">DV HDR10+</option>
+                  <option value="HLG">HLG</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Áudio -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <h3>Áudio</h3>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fieldAudioCodec">Codec de Áudio</label>
+                <select id="fieldAudioCodec" data-field="audioCodec">
+                  <option value=""></option>
+                  <option value="DD">DD</option>
+                  <option value="DDP">DDP</option>
+                  <option value="TrueHD">TrueHD</option>
+                  <option value="DTS">DTS</option>
+                  <option value="DTS-HD MA">DTS-HD MA</option>
+                  <option value="DTS-HD HRA">DTS-HD HRA</option>
+                  <option value="DTS:X">DTS:X</option>
+                  <option value="DTS-ES">DTS-ES</option>
+                  <option value="AAC">AAC</option>
+                  <option value="FLAC">FLAC</option>
+                  <option value="LPCM">LPCM</option>
+                  <option value="MP3">MP3</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="fieldChannels">Canais</label>
+                <select id="fieldChannels" data-field="channels">
+                  <option value=""></option>
+                  <option value="1.0">1.0</option>
+                  <option value="2.0">2.0</option>
+                  <option value="5.1">5.1</option>
+                  <option value="7.1">7.1</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="checkbox-grid">
+              <label class="checkbox-label"><input type="checkbox" data-field="atmos"><span>Atmos</span></label>
+              <label class="checkbox-label"><input type="checkbox" data-field="hfr"><span>HFR</span></label>
+              <label class="checkbox-label"><input type="checkbox" data-field="hybrid"><span>Hybrid</span></label>
+              <label class="checkbox-label"><input type="checkbox" data-field="repack"><span>REPACK</span></label>
+            </div>
+          </div>
+
+          <!-- 4. Idiomas & Créditos -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <h3>Idiomas & Créditos</h3>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fieldDualMulti">Idiomas</label>
+                <select id="fieldDualMulti" data-field="dualMulti">
+                  <option value=""></option>
+                  <option value="DUAL">DUAL</option>
+                  <option value="MULTi">MULTi</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="fieldGroup">Grupo / Tag</label>
+                <input type="text" id="fieldGroup" data-field="group" placeholder="BiOMA, Kitsune…">
+              </div>
+            </div>
+
+            <div class="form-group hidden" id="wrapSecondGroup">
+              <label for="fieldOriginalGroup">Grupo Original (Adaptação)</label>
+              <input type="text" id="fieldOriginalGroup" data-field="originalGroup" placeholder="Ex.: FLUX">
+            </div>
+
+            <div class="checkbox-grid" style="margin-top: 10px;">
+              <label class="checkbox-label"><input type="checkbox" id="checkTwoGroups"><span>Dois grupos</span></label>
+              <label class="checkbox-label"><input type="checkbox" id="checkDots" checked><span>Pontos nos arquivos</span></label>
+            </div>
+          </div>
+
+          <!-- 5. Físico / Extras -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <h3>Mídia Física & Extras</h3>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fieldRegion">Região / Padrão</label>
+                <input type="text" id="fieldRegion" data-field="region" placeholder="BRA, USA, NTSC…">
+              </div>
+
+              <div class="form-group">
+                <label for="fieldDiscCount">Qtd. Discos (DVD)</label>
+                <input type="text" id="fieldDiscCount" data-field="discCount" placeholder="3x (apenas DVD)">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="fieldSpecial">Conteúdo Especial</label>
+              <select id="fieldSpecial" data-field="special">
+                <option value=""></option>
+                <option value="extras">Extras</option>
+                <option value="bonus">Bonus Disc</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Botão Atualizar Prévia -->
+          <div style="margin-top: 24px;">
+            <button class="btn btn-primary" id="btnUpdatePreview" style="width: 100%;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+              Atualizar Prévia
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Painel Principal de Trabalho (Workspace) -->
+      <section class="workspace-panel">
+        <!-- Card de Anatomia da Tag / Prévia da Pasta -->
+        <div class="anatomy-card">
+          <div class="anatomy-title-row">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="step-num">3</span>
+              <h2 style="font-size: 1.1rem; font-weight: 750;">Anatomia do Nome & Pasta</h2>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="btnCopyFolderName" title="Copiar nome da pasta">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              Copiar Pasta
+            </button>
+          </div>
+
+          <!-- Pills de Anatomia -->
+          <div class="anatomy-pill-box" id="anatomyPills">
+            <span style="color: var(--text-muted); font-size: 0.85rem;">Carregue uma pasta ou preencha o formulário para visualizar a anatomia do release.</span>
+          </div>
+
+          <!-- Input do Nome da Pasta -->
+          <div style="margin-top: 14px;">
+            <label for="newRootInput" style="font-size: 0.725rem; text-transform: uppercase; letter-spacing: 0.05em;">Nome Final da Pasta Principal</label>
+            <input type="text" id="newRootInput" style="font-family: var(--font-mono); font-weight: 600;" placeholder="Nome da pasta principal…">
+          </div>
+
+          <!-- Título de Postagem para o Tracker -->
+          <div class="copy-post-box">
+            <div style="display: flex; gap: 8px; align-items: center; min-width: 0;">
+              <span style="font-weight: 700; color: var(--accent); font-size: 0.75rem; text-transform: uppercase;">Título do Tracker:</span>
+              <span id="postTitleText">-</span>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="btnCopyPostTitle" title="Copiar título da postagem com espaços">Copiar</button>
+          </div>
+        </div>
+
+        <!-- Painel de Avisos & Dicas de Validação -->
+        <div class="issues-panel" id="issuesPanel"></div>
+
+        <!-- Tabela de Arquivos -->
+        <div class="table-card">
+          <div class="table-toolbar">
+            <div class="table-stats" id="tableStats">
+              <span><b>0</b> arquivos</span>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-ghost btn-sm" id="btnOpenFolderNative" title="Abrir pasta no Explorador">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+                Abrir Pasta
+              </button>
+
+              <button class="btn btn-secondary btn-sm" id="btnUndo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+                Desfazer Última
+              </button>
+
+              <button class="btn btn-primary btn-sm" id="btnApply">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Renomear Selecionados
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th width="42"><input type="checkbox" id="selectAllCheckbox" checked></th>
+                  <th width="32%">Nome Atual</th>
+                  <th width="48%">Novo Nome Projetado</th>
+                  <th width="10%">Tag</th>
+                  <th width="10%">Status</th>
+                </tr>
+              </thead>
+              <tbody id="filesTableBody">
+                <tr>
+                  <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                    Nenhum arquivo carregado. Escolha uma pasta à esquerda e clique em <b>Carregar →</b>.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal 1: Guia de Uso Completo -->
+  <dialog class="modal" id="modalGuide" aria-labelledby="guideModalTitle">
+    <div class="modal-header">
+      <h2 id="guideModalTitle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        Guia de Uso & Regras de Nomenclatura
+      </h2>
+      <button class="btn btn-ghost btn-icon" id="btnCloseGuide">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="guide-layout">
+        <nav class="guide-nav">
+          <a href="#guide-start" class="active">Primeiros passos</a>
+          <a href="#guide-fields">O que preencher</a>
+          <a href="#guide-season">Temporadas</a>
+          <a href="#guide-files">Arquivos e nomes aceitos</a>
+          <a href="#guide-rules">Padrões dos trackers</a>
+          <a href="#guide-undo">Desfazer alterações</a>
+          <a href="#guide-about">Sobre</a>
+        </nav>
+        <article class="guide-content">
+          <section id="guide-start">
+            <h3>Primeiros passos</h3>
+            <p>O BacateTagAssist renomeia filmes, séries e animes. Preencha os dados do release e confira a prévia antes de aplicar. A pasta principal também será renomeada.</p>
+            <ol style="padding-left: 20px; line-height: 1.8;">
+              <li><strong>Escolha a pasta</strong> que contém o filme ou uma temporada e clique em Carregar.</li>
+              <li><strong>Selecione o modo:</strong> Filme, Season pack (temporada) ou Episódio.</li>
+              <li><strong>Preencha os detalhes</strong> ou use os assistentes inteligentes (MediaInfo / TMDB).</li>
+              <li><strong>Confira a pasta e cada linha.</strong> Os novos nomes podem ser editados individualmente.</li>
+              <li><strong>Renomeie os selecionados.</strong> Confirme somente quando a prévia estiver correta.</li>
+            </ol>
+          </section>
+
+          <section id="guide-fields">
+            <h3>Campos do formulário</h3>
+            <dl>
+              <dt>Nome, ano e edição</dt>
+              <dd>O título da obra, o ano de lançamento e, se houver, uma versão confirmada como Extended, IMAX ou Director's Cut. Para a versão comum, deixe Edição vazia. O ano de séries é usado quando necessário para diferenciar títulos.</dd>
+              <dt>Origem e streaming</dt>
+              <dd>Origem indica de onde veio o release: WEB-DL, WEBRip, BluRay, DVD etc. Streaming é o serviço: NF (Netflix), AMZN (Amazon), CR (Crunchyroll). A sigla de streaming só entra em releases WEB.</dd>
+              <dt>Codec de vídeo e áudio</dt>
+              <dd>São os formatos usados no arquivo, como H.264, HEVC, AAC e DDP. Não representam a extensão: MKV é um contêiner. Informe os dados confirmados do release.</dd>
+              <dt>Resolução e canais</dt>
+              <dd>1080p ou 2160p indicam a classe da imagem; 2.0, 5.1 e 7.1 descrevem os canais de áudio. Renomear não muda a qualidade.</dd>
+              <dt>Range, Atmos e HFR</dt>
+              <dd>HDR, DV e HLG são características da imagem; Atmos é um recurso do áudio e HFR indica taxa de quadros elevada. Marque apenas o que estiver presente. SDR fica sem tag.</dd>
+              <dt>DUAL, MULTi e grupos</dt>
+              <dd>No guia fornecido, DUAL significa áudio original + PT-BR. MULTi indica três ou mais idiomas, incluindo PT-BR. Preserve os créditos; em adaptações com dois grupos, informe o original e o responsável pela adaptação. Sem grupo, usa-se NoGroup.</dd>
+              <dt>REMUX e REPACK</dt>
+              <dd>REMUX é o conteúdo do disco sem conversão. REPACK é uma correção oficial pelo responsável original; não marque apenas por ter adicionado um áudio.</dd>
+              <dt>Região, discos e extras</dt>
+              <dd>Região/padrão é usado quando aplicável à mídia física (BRA, USA, NTSC, PAL). Quantidade de discos aparece em DVD, como 3xDVD9. Extras e Bonus Disc identificam material extra oficial.</dd>
+            </dl>
+          </section>
+
+          <section id="guide-season">
+            <h3>Renomear uma temporada</h3>
+            <p>No modo Season pack, preencha a temporada como S01 ou S02. A pasta usa S01, enquanto cada vídeo precisa do identificador completo, como S01E01.</p>
+            <div class="example-box">
+              1.mkv → Minha.Serie.S01E01…mkv<br>
+              10.mkv → Minha.Serie.S01E10…mkv<br>
+              1.srt → Minha.Serie.S01E01…srt
+            </div>
+            <p>A identificação usa o nome atual: números simples, EP 1, S1E1 e alguns intervalos. Ela não consulta o TVDB nem sabe a ordem narrativa. Nomes já numerados devem ser conferidos; arquivos não reconhecidos ficam desmarcados. Confira especiais (S00) e episódios duplos manualmente.</p>
+            <p>Legendas com o mesmo número recebem a mesma base do vídeo. Várias legendas de mesma extensão podem gerar conflito: revise cada caso. Esta versão não adiciona nem remove faixas do MKV.</p>
+          </section>
+
+          <section id="guide-files">
+            <h3>Arquivos e nomes aceitos</h3>
+            <p><strong>Vídeos:</strong> .mkv, .mp4, .avi, .mov, .m4v, .ts, .m2ts e .webm.</p>
+            <p><strong>Legendas:</strong> .srt, .ass, .ssa e .vtt.</p>
+            <p>Extensões em maiúsculas também são aceitas, como .MKV. Outros tipos de arquivo não aparecem na lista. A extensão original é mantida ao renomear.</p>
+
+            <h3>Como ele identifica o episódio</h3>
+            <p>O app lê o número no nome do arquivo. No modo Season pack, com a temporada preenchida como <strong>S01</strong>, os exemplos abaixo ficam assim:</p>
+            <div class="example-box">
+              1.mkv → S01E01<br>
+              01.mkv → S01E01<br>
+              2.mkv → S01E02<br>
+              10.mkv → S01E10<br>
+              EP 1.mkv → S01E01<br>
+              E1.mkv → S01E01<br>
+              Episode 1.mkv → S01E01<br>
+              Episodio 1.mkv → S01E01<br>
+              S1E1.mkv → S01E01<br>
+              Serie.S01E03.mkv → S01E03<br>
+              5-6.mkv → S01E05-E06<br>
+              EP 5-6.mkv → S01E05-E06<br>
+              S01E05-E06.mkv → S01E05-E06<br>
+              1.srt → S01E01
+            </div>
+            <p>A tabela mostra só a parte de temporada e episódio. O nome completo também inclui o título, os dados preenchidos e a extensão. Exemplo: <code>Minha.Serie.S01E01.1080p.NF.WEB-DL.H.264-Bacate.mkv</code>.</p>
+          </section>
+
+          <section id="guide-rules">
+            <h3>Nomenclatura para trackers</h3>
+            <p>O BacateTagAssist usa o guia de nomenclatura do <strong>CapybaraBR</strong>, <strong>Samaritano</strong> e de comunidades com regras padronizadas.</p>
+            <p>Arquivos e pastas usam pontos; títulos de postagem usam espaços. WEB/encodes e REMUX/Full Disc têm ordens diferentes. Confira sempre as regras atuais do tracker de destino.</p>
+          </section>
+
+          <section id="guide-undo">
+            <h3>Renomear e desfazer</h3>
+            <p>O app muda nomes, incluindo o da pasta principal, de forma segura e transacional.</p>
+            <p><strong>Desfazer última:</strong> restaura os nomes anteriores através de histórico persistido no sistema.</p>
+          </section>
+
+          <section id="guide-about">
+            <h3>Sobre</h3>
+            <p>BacateTagAssist · Edição Pro Transcendental.</p>
+            <p>Pronto para Desktop Windows (10/11) e containers Docker/Podman para OpenMediaVault e NAS.</p>
+          </section>
+        </article>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Modal 2: TMDB Busca Inteligente -->
+  <dialog class="modal" id="modalTmdb">
+    <div class="modal-header">
+      <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        Buscar no TMDB (Filmes & Séries)
+      </h2>
+      <button class="btn btn-ghost btn-icon" id="btnCloseTmdb">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tmdb-search-bar">
+        <input type="text" id="tmdbQueryInput" placeholder="Nome da obra, IMDb ID (tt1234567), ID ou Link do TMDB…" />
+        <select id="tmdbTypeSelect" style="width: 140px;">
+          <option value="movie">Filme</option>
+          <option value="tv">Série / Anime</option>
+        </select>
+        <button class="btn btn-primary" id="btnExecuteTmdbSearch">Pesquisar</button>
+      </div>
+
+      <div id="tmdbNotice" style="margin-bottom: 14px; font-size: 0.85rem; color: var(--text-muted);"></div>
+
+      <div class="tmdb-results-grid" id="tmdbResultsGrid"></div>
+    </div>
+  </dialog>
+
+  <!-- Modal 3: Navegador de Pastas do Servidor (Web / Docker / OMV) -->
+  <dialog class="modal" id="modalBrowser">
+    <div class="modal-header">
+      <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+        Navegador de Diretórios do Servidor
+      </h2>
+      <button class="btn btn-ghost btn-icon" id="btnCloseBrowser">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="browser-crumbs" id="browserCrumbs"></div>
+      <div class="browser-list" id="browserList"></div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+        <span id="browserCurrentPath" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);"></span>
+        <button class="btn btn-primary" id="btnSelectCurrentBrowserFolder">Selecionar Esta Pasta</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Modal 4: Inspetor Detalhado MediaInfo -->
+  <dialog class="modal" id="modalMediaInfo">
+    <div class="modal-header">
+      <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect width="15" height="14" x="1" y="5" rx="2" ry="2"/></svg>
+        Análise Detalhada do MediaInfo
+      </h2>
+      <button class="btn btn-ghost btn-icon" id="btnCloseMediaInfo">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="mediaInfoBody"></div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button class="btn btn-secondary" id="btnCopyMediaInfoJson">Copiar JSON</button>
+        <button class="btn btn-primary" id="btnApplyMediaInfoSuggestions">Aplicar Tags Sugeridas</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Modal 5: Configurações -->
+  <dialog class="modal" id="modalSettings" style="max-width: 620px;">
+    <div class="modal-header">
+      <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        Configurações do Sistema
+      </h2>
+      <button class="btn btn-ghost btn-icon" id="btnCloseSettings">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="cfgTmdbKey">Chave da API do TMDB (v3 ou Token Bearer v4)</label>
+        <input type="text" id="cfgTmdbKey" placeholder="Cole sua API Key do themoviedb.org aqui…">
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+          Obtenha uma chave gratuita em themoviedb.org > Configurações > API.
+        </p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cfgTitlePreference">Preferência de Título ao Escolher no TMDB</label>
+          <select id="cfgTitlePreference">
+            <option value="en">Título em Inglês (Padrão dos Trackers)</option>
+            <option value="pt">Título em Português (PT-BR)</option>
+            <option value="original">Título Original (Ex.: Nome em Japonês para Animes)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cfgDefaultGroup">Grupo Padrão para Preenchimento</label>
+          <input type="text" id="cfgDefaultGroup" placeholder="Ex.: BiOMA, Kitsune…">
+        </div>
+      </div>
+
+      <!-- Status do MediaInfo -->
+      <div style="margin-top: 18px; padding: 14px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-md);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h4 style="font-size: 0.85rem; font-weight: 700;">Status do MediaInfo CLI</h4>
+            <p id="cfgMediaInfoDesc" style="font-size: 0.775rem; color: var(--text-muted); margin-top: 2px;">Verificando…</p>
+          </div>
+          <button class="btn btn-secondary btn-sm hidden" id="btnInstallMediaInfo">Instalar Agora (≈4MB)</button>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+        <button class="btn btn-primary" id="btnSaveSettings">Salvar Configurações</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Container de Toasts -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Overlay de Carregamento -->
+  <div class="busy-overlay hidden" id="busyOverlay">
+    <div class="spinner"></div>
+    <p id="busyText" style="font-weight: 600; font-size: 0.95rem;">Processando…</p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

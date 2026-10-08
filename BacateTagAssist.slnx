@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BacateTagAssist.Core/BacateTagAssist.Core.csproj" />
+    <Project Path="src/BacateTagAssist.Desktop/BacateTagAssist.Desktop.csproj" />
+    <Project Path="src/BacateTagAssist.Server/BacateTagAssist.Server.csproj" />
+    <Project Path="src/BacateTagAssist.Web/BacateTagAssist.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BacateTagAssist.Tests/BacateTagAssist.Tests.csproj" />
+  </Folder>
+</Solution>
