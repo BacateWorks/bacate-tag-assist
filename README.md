@@ -44,7 +44,7 @@
 
 ### 🪟 No Windows (Desktop)
 
-1. Baixe o arquivo `BacateTagAssist-v1.0.0-Windows-x64.zip` na aba [Releases](https://github.com).
+1. Baixe o arquivo `BacateTagAssist-v1.0.0-Windows-x64.zip` na aba [Releases](https://github.com/BacateWorks/bacate-tag-assist/releases).
 2. Extraia o conteúdo para uma pasta de sua preferência.
 3. Execute `BacateTagAssist.Desktop.exe`.
 4. Selecione a pasta, preencha os dados (ou use o MediaInfo e o TMDB) e clique em **Renomear Selecionados**!
@@ -53,25 +53,29 @@
 
 ---
 
-### 🐳 No Docker / OpenMediaVault / Unraid
+### 🐳 No Docker / Docker Compose
 
 Crie um arquivo `docker-compose.yml`:
 
 ```yaml
 services:
   bacate-tag-assist:
-    image: ghcr.io/bacate/bacate-tag-assist:latest
+    image: ghcr.io/bacateworks/bacate-tag-assist:latest
     container_name: bacate-tag-assist
     restart: unless-stopped
     ports:
-      - "5000:5000"
+      # Permite alterar a porta externa definindo a variável BTA_PORT (padrão: 5000)
+      - "${BTA_PORT:-5000}:5000"
     environment:
       - TZ=America/Sao_Paulo
       - BTA_CONFIG_DIR=/config
       - BTA_ROOTS=/media
       # - TMDB_API_KEY=sua_chave_opcional
     volumes:
+      # Configurações, histórico de desfazer e preferências (persistente)
       - ./config:/config
+      # Pastas de mídia onde ficam os seus downloads/filmes/séries
+      # IMPORTANTE: A pasta montada em /media precisa de permissão de escrita para que o aplicativo renomeie arquivos!
       - /caminho/para/seus/videos:/media
 ```
 
@@ -79,7 +83,24 @@ Inicie o container:
 ```bash
 docker compose up -d
 ```
-Acesse no seu navegador: `http://ip-do-servidor:5000`
+Acesse no seu navegador: `http://localhost:5000` (ou o IP do seu servidor).
+
+---
+
+### 🗄️ No OpenMediaVault (OMV) / Unraid
+
+1. No OpenMediaVault, acesse **Services** > **Compose** > **Files**.
+2. Adicione um novo arquivo Compose colando a estrutura acima.
+3. Certifique-se de apontar `/media` para a pasta compartilhada dos seus vídeos (ex: `/srv/dev-disk-by-uuid-.../videos:/media`).
+4. **Permissões:** O container executa sob o usuário não-root `1000:1000`. No OMV, assegure-se de que a pasta de mídia conceda permissão de leitura e escrita (Read/Write) para o usuário ou utilize `chmod -R 775` na pasta compartilhada.
+5. Inicie o container e acesse pela porta `5000`.
+
+> ⚠️ **Configuração de Visibilidade do Pacote no GitHub Packages (GHCR):**
+> Caso você seja o mantenedor e a imagem do GHCR seja recém-criada, certifique-se de torná-la **Pública** para permitir o download sem necessidade de login:
+> 1. No GitHub, acesse a página da organização ou usuário: **BacateWorks** > aba **Packages**.
+> 2. Clique no pacote `bacate-tag-assist`.
+> 3. No menu lateral, acesse **Package settings** > **Danger Zone** > **Change visibility**.
+> 4. Alterne para **Public** e confirme.
 
 ---
 
@@ -94,7 +115,7 @@ podman run -d \
   -v ~/.config/bacate-tag-assist:/config:Z \
   -v /seus/videos:/media:Z \
   -e TZ=America/Sao_Paulo \
-  ghcr.io/bacate/bacate-tag-assist:latest
+  ghcr.io/bacateworks/bacate-tag-assist:latest
 ```
 
 Ou use o arquivo de serviço systemd Quadlet incluído em `deploy/podman/bacate-tag-assist.container`.
@@ -107,7 +128,7 @@ Para compilar localmente, é necessário o **.NET 10 SDK**:
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/gerli/bacate-tag-assist.git
+git clone https://github.com/BacateWorks/bacate-tag-assist.git
 cd bacate-tag-assist
 
 # Rodar os testes unitários

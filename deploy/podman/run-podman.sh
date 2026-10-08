@@ -24,6 +24,6 @@ podman run -d \
   -e TZ=America/Sao_Paulo \
   -e BTA_CONFIG_DIR=/config \
   -e BTA_ROOTS=/media \
-  ghcr.io/bacate/bacate-tag-assist:latest
+  ghcr.io/bacateworks/bacate-tag-assist:latest
 
 echo "Pronto! Acesse http://localhost:5000 no seu navegador."

@@ -1,21 +1,24 @@
 services:
   bacate-tag-assist:
-    image: ghcr.io/bacate/bacate-tag-assist:latest
+    image: ghcr.io/bacateworks/bacate-tag-assist:latest
     build:
       context: ..
       dockerfile: docker/Dockerfile
     container_name: bacate-tag-assist
     restart: unless-stopped
     ports:
-      - "5000:5000"
+      # Permite escolher a porta externa via BTA_PORT (padrão: 5000)
+      - "${BTA_PORT:-5000}:5000"
     environment:
       - TZ=America/Sao_Paulo
       - BTA_CONFIG_DIR=/config
       - BTA_ROOTS=/media
-      # Opcional: Chave do TMDB via variável de ambiente
+      # Opcional: Chave da API do TMDB configurada globalmente
       # - TMDB_API_KEY=sua_chave_aqui
     volumes:
-      # Configurações, histórico de desfazer e preferências
+      # Configurações, preferências e histórico de desfazer (persistente)
       - ./config:/config
       # Pastas de mídia onde ficam os seus downloads/filmes/séries
+      # ATENÇÃO: A pasta de mídia no host precisa ter permissão de escrita
+      # (ex: chmod -R 775 ou chown para UID 1000) para o aplicativo conseguir renomear os arquivos.
       - /caminho/para/seus/videos:/media

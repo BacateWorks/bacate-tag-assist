@@ -9,7 +9,7 @@ Description=BacateTagAssist Container
 After=network-online.target
 
 [Container]
-Image=ghcr.io/bacate/bacate-tag-assist:latest
+Image=ghcr.io/bacateworks/bacate-tag-assist:latest
 ContainerName=bacate-tag-assist
 PublishPort=5000:5000
 Volume=%h/.config/bacate-tag-assist:/config:Z
