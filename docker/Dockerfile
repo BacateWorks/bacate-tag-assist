@@ -38,9 +38,7 @@ RUN apt-get update && \
 
 # Cria diretórios de dados e mídia com permissões adequadas
 RUN mkdir -p /config /media && \
-    groupadd -g 1000 bta && \
-    useradd -u 1000 -g bta -d /config -s /bin/bash bta && \
-    chown -R bta:bta /config /media
+    chown -R 1000:1000 /config /media
 
 COPY --from=build /app ./
 
@@ -54,6 +52,6 @@ EXPOSE 5000
 
 VOLUME ["/config", "/media"]
 
-USER bta
+USER 1000
 
 ENTRYPOINT ["dotnet", "BacateTagAssist.Server.dll", "--no-browser"]
