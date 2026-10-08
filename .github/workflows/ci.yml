@@ -54,10 +54,10 @@ jobs:
       - name: Validate Container Environment
         run: |
           echo "=== 1. Validando instalacao do MediaInfo ==="
-          docker run --rm bacate-tag-assist:local mediainfo --version
+          docker run --rm --entrypoint mediainfo bacate-tag-assist:local --version
 
           echo "=== 2. Validando usuario nao-root (UID != 0) ==="
-          USER_ID=$(docker run --rm bacate-tag-assist:local id -u)
+          USER_ID=$(docker run --rm --entrypoint id bacate-tag-assist:local -u)
           echo "Usuario em execucao UID: $USER_ID"
           if [ "$USER_ID" = "0" ]; then
             echo "ERRO: O container nao deve executar como root!"
@@ -67,7 +67,7 @@ jobs:
           echo "=== 3. Validando leitura e escrita em /media ==="
           mkdir -p /tmp/ci_media
           chmod 777 /tmp/ci_media
-          docker run --rm -v /tmp/ci_media:/media bacate-tag-assist:local sh -c "echo 'teste-escrita-media' > /media/valida.txt && cat /media/valida.txt && rm /media/valida.txt"
+          docker run --rm --entrypoint sh -v /tmp/ci_media:/media bacate-tag-assist:local -c "echo 'teste-escrita-media' > /media/valida.txt && cat /media/valida.txt && rm /media/valida.txt"
           rm -rf /tmp/ci_media
 
           echo "=== 4. Validando inicializacao e resposta HTTP 200 ==="
